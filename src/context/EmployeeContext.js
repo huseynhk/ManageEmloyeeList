@@ -17,8 +17,16 @@ const addEmployee = (name ,email ,address,phone) => {
     setEmployees([...employees , {id:uuidv4(),name ,email ,address,phone}])
 }
 
+const deleteEmployee = (id) => {
+    setEmployees(employees.filter(employee => employee.id !== id))
+}
+
+const updateEmployee = (id , updateEmloyeeId) => {
+    setEmployees(employees.map((employee) => (employee.id === id ? updateEmloyeeId : employee)))
+}
+
     return (
-        <EmployeeContext.Provider value={{employees , addEmployee}} >
+        <EmployeeContext.Provider value={{employees , addEmployee , deleteEmployee , updateEmployee}} >
             {props.children}
         </EmployeeContext.Provider>
     )

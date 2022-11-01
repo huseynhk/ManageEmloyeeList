@@ -17,9 +17,16 @@ const EmployeeList = () =>{
             handleClose();
         },[employees])
 
+      //const myRef = useRef(null)
+      
+    //   const onButtonClick = () =>{
+    //      myRef.current.focus();
+    //   }
+
     return (
 
         <>
+          
         <div className="table-title">
         <div className="row">
             <div className="col-sm-6">
@@ -42,7 +49,15 @@ const EmployeeList = () =>{
 					</tr>
 				</thead>
 				<tbody>
-                <Employee employees={employees}/> 
+                    {
+                        
+                        employees.map((employee) => (
+                            <tr key={employee.id}>
+                          <Employee employee={employee}/> 
+                            </tr>
+                        ))
+                        
+                    }
                 </tbody>
                 </table>
 
@@ -61,6 +76,10 @@ const EmployeeList = () =>{
                 </Button>
             </Modal.Footer>
         </Modal>
+
+       {/* <input ref={myRef} type="text"></input>
+       <button onClick={onButtonClick}>Focus Input</button> */}
+
         </> 
     )
 }

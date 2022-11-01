@@ -18,14 +18,16 @@ const AddForm = () =>{
     
     const {name , email ,address , phone} = newEmployee;
 
+    const onInputChange = (e) => {
+        setNewEmloyee({...newEmployee , [e.target.name] : e.target.value})
+    } 
+    
     const handleSubmit = (e) => {
      e.preventDefault();
      addEmployee(name , email , address , phone)
     }
     
-    const onInputChange = (e) => {
-        setNewEmloyee({...newEmployee , [e.target.name] : e.target.value})
-    }
+   
     
 
     return(
