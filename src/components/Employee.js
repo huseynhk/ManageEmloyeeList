@@ -6,7 +6,7 @@ import EditForm from "./EditForm";
 const Employee = ({ employee }) => {
 
     const { deleteEmployee } = useContext(EmployeeContext);
-    const [show , setShow] = useState(false);
+    const [ show , setShow] = useState(false);
 
     const handleShow = () =>  setShow(true);
     const handleClose = () => setShow(false);
