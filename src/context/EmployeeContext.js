@@ -1,22 +1,66 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useReducer } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export const EmployeeContext = createContext();
 
 const EmployeeContextProvider = (props) => {
+    
+    const reducer = (employees , action) => {
 
-    const [employees, setEmployees] = useState([
-        { id: uuidv4(), name: 'Thomas Hardy', email: 'thomashardy@mail.com', address: '89 Chiaroscuro Rd, Portland, USA', phone: '(171) 555-2222' },
-        { id: uuidv4(), name: 'Dominique Perrier', email: 'dominiqueperrier@mail.com', address: 'Obere Str. 57, Berlin, Germany', phone: '(313) 555-5735' },
-        { id: uuidv4(), name: 'Maria Anders', email: 'mariaanders@mail.com', address: '25, rue Lauriston, Paris, France', phone: '(503) 555-9931' },
-        { id: uuidv4(), name: 'Fran Wilson', email: 'franwilson@mail.com', address: 'C/ Araquil, 67, Madrid, Spain', phone: '(204) 619-5731' },
-        { id: uuidv4(), name: 'Martin Blank', email: 'martinblank@mail.com', address: 'Via Monte Bianco 34, Turin, Italy', phone: '(480) 631-2097' }
-    ])
+        switch(action.type) {
+            case 'add_employee':
+            return [...employees , {
+                id : uuidv4(),
+                name : action.employee.name,
+                email : action.employee.email,
+                address : action.employee.address,
+                phone : action.employee.phone,
+            }]
 
-    useEffect(()=>{
-      const employees =  localStorage.getItem('employees')
-      setEmployees(JSON.parse(employees))
-})
+            case 'remove_employee':
+                return employees.filter(employee => employee.id !== action.id)
+
+            case 'update_employee' :
+                return employees.map(
+                    (employees) => (employees.id === action.id ? action.updateEmployee : employees))
+
+             default :
+              return employees;       
+        }
+    }
+
+
+    const [employees , dispatch] = useReducer( reducer , [
+
+        // { id: uuidv4(), name: 'Thomas Hardy', email: 'thomashardy@mail.com', address: '89 Chiaroscuro Rd, Portland, USA', phone: '(171) 555-2222' },
+        // { id: uuidv4(), name: 'Dominique Perrier', email: 'dominiqueperrier@mail.com', address: 'Obere Str. 57, Berlin, Germany', phone: '(313) 555-5735' },
+        // { id: uuidv4(), name: 'Maria Anders', email: 'mariaanders@mail.com', address: '25, rue Lauriston, Paris, France', phone: '(503) 555-9931' },
+        // { id: uuidv4(), name: 'Fran Wilson', email: 'franwilson@mail.com', address: 'C/ Araquil, 67, Madrid, Spain', phone: '(204) 619-5731' },
+        // { id: uuidv4(), name: 'Martin Blank', email: 'martinblank@mail.com', address: 'Via Monte Bianco 34, Turin, Italy', phone: '(480) 631-2097' }
+    ],
+
+    () => {
+        const employees = localStorage.getItem('employees')
+        return employees ? JSON.parse(employees) : [];
+    }
+    
+    
+    
+    )
+
+
+    // const [employees, setEmployees] = useState([
+    //     { id: uuidv4(), name: 'Thomas Hardy', email: 'thomashardy@mail.com', address: '89 Chiaroscuro Rd, Portland, USA', phone: '(171) 555-2222' },
+    //     { id: uuidv4(), name: 'Dominique Perrier', email: 'dominiqueperrier@mail.com', address: 'Obere Str. 57, Berlin, Germany', phone: '(313) 555-5735' },
+    //     { id: uuidv4(), name: 'Maria Anders', email: 'mariaanders@mail.com', address: '25, rue Lauriston, Paris, France', phone: '(503) 555-9931' },
+    //     { id: uuidv4(), name: 'Fran Wilson', email: 'franwilson@mail.com', address: 'C/ Araquil, 67, Madrid, Spain', phone: '(204) 619-5731' },
+    //     { id: uuidv4(), name: 'Martin Blank', email: 'martinblank@mail.com', address: 'Via Monte Bianco 34, Turin, Italy', phone: '(480) 631-2097' }
+    // ])
+
+//     useEffect(()=>{
+//       const employees =  localStorage.getItem('employees')
+//       setEmployees(JSON.parse(employees))
+// })
 
     useEffect(()=>{
         localStorage.setItem('employees',JSON.stringify(employees))
@@ -26,20 +70,26 @@ const EmployeeContextProvider = (props) => {
                                    //.sort((a,b) => a.name.localeCompare(b.name));
 
 
-    const addEmployee = (name, email, address, phone) => {
-        setEmployees([...employees, { id: uuidv4(), name, email, address, phone }])
-    }
+    // const addEmployee = (name, email, address, phone) => {
+    //     setEmployees([...employees, { id: uuidv4(), name, email, address, phone }])
+    // }
 
-    const deleteEmployee = (id) => {
-        setEmployees(employees.filter(employee => employee.id !== id))
-    }
+    // const deleteEmployee = (id) => {
+    //     setEmployees(employees.filter(employee => employee.id !== id))
+    // }
 
-    const updateEmployee = (id, updateEmloyeeId) => {
-        setEmployees(employees.map((employee) => (employee.id === id ? updateEmloyeeId : employee)))
-    }
+    // const updateEmployee = (id, updateEmloyeeId) => {
+    //     setEmployees(employees.map((employee) => (employee.id === id ? updateEmloyeeId : employee)))
+    // }
 
-    return (
-        <EmployeeContext.Provider value={{sortedEmployees, addEmployee, deleteEmployee, updateEmployee }}>
+    // return (                             
+    //     <EmployeeContext.Provider value={{sortedEmployees,addEmployee , deleteEmployee, updateEmployee }}>
+    //         {props.children}
+    //     </EmployeeContext.Provider>
+    // )
+
+    return (                             
+        <EmployeeContext.Provider value={{sortedEmployees, dispatch }}>
             {props.children}
         </EmployeeContext.Provider>
     )
